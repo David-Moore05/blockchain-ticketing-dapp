@@ -22,7 +22,7 @@ const ETHERSCAN_BASE  = "https://sepolia.etherscan.io";
  * Example: "0xAbCd1234..."
  * Leave as null until deployed — the app will show a warning.
  */
-const CONTRACT_ADDRESS = null; // <- REPLACE ME after deployment
+const CONTRACT_ADDRESS = "0x11c8F90A453BC8156A87CF3B9A5F9CA1CC5e81Bb"
 
 // ══════════════════════════════════════════════════════════════
 //  ERC-20 + TicketToken ABI
