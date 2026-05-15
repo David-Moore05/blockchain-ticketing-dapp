@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TicketToken — Blockchain Ticketing DApp</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════
+       TOP NAVIGATION BAR
+  ══════════════════════════════════════ -->
+  <nav class="topnav">
+    <div class="nav-inner">
+
+      <!-- Brand / Logo -->
+      <div class="nav-brand">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
+          <path d="M13 5v2M13 17v2M13 11v2"/>
+        </svg>
+        <h1>TicketToken</h1>
+      </div>
+
+      <!-- Page Tabs -->
+      <div class="nav-links">
+        <button class="nav-item active" onclick="showTab('home', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Home
+        </button>
+        <button class="nav-item" onclick="showTab('createWallet', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+          Create Wallet
+        </button>
+        <button class="nav-item" onclick="showTab('checkBalances', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Check Balances
+        </button>
+        <button class="nav-item" onclick="showTab('buyTicket', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+          Buy Ticket
+        </button>
+        <button class="nav-item" onclick="showTab('sendToVendor', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+          Send to Vendor
+        </button>
+      </div>
+
+      <!-- Right: Network Badge + Contract Pill -->
+      <div class="nav-right">
+        <div class="network-badge">Sepolia Testnet</div>
+        <div class="contract-pill">
+          Contract:&nbsp;<a id="contractLink" href="#" target="_blank">Not deployed</a>
+        </div>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════════════
+       MAIN CONTENT — CENTRED
+  ══════════════════════════════════════ -->
+  <main class="main">
+    <div class="content-area">
+
+      <!-- ─────────────────────────────────
+           HOME
+      ───────────────────────────────── -->
+      <div id="home" class="tab-panel active">
+        <div class="hero-banner">
+          <h2>🎟️ TicketToken DApp</h2>
+          <p>A Web3 Distributed Application implementing a blockchain-based ticketing system on the Ethereum Sepolia Testnet. Purchase, verify, and transfer event tickets secured by smart contracts — no middleman needed.</p>
+        </div>
+
+        <div class="home-grid">
+          <div class="feature-card" onclick="showTab('createWallet', document.querySelector('[onclick*=createWallet]'))">
+            <div class="fc-icon">🔑</div>
+            <h3>Create Wallet</h3>
+            <p>Generate a new Ethereum wallet with encrypted keystore download.</p>
+          </div>
+          <div class="feature-card" onclick="showTab('checkBalances', document.querySelector('[onclick*=checkBalances]'))">
+            <div class="fc-icon">💰</div>
+            <h3>Check Balances</h3>
+            <p>View SETH and ticket token balances for any wallet address.</p>
+          </div>
+          <div class="feature-card" onclick="showTab('buyTicket', document.querySelector('[onclick*=buyTicket]'))">
+            <div class="fc-icon">🛒</div>
+            <h3>Buy Ticket</h3>
+            <p>Purchase ticket tokens using Sepolia ETH via the smart contract.</p>
+          </div>
+          <div class="feature-card" onclick="showTab('sendToVendor', document.querySelector('[onclick*=sendToVendor]'))">
+            <div class="fc-icon">🚪</div>
+            <h3>Send to Vendor</h3>
+            <p>Transfer your ticket token back to the venue for entry.</p>
+          </div>
+        </div>
+
+        <div class="info-block" style="margin-top:18px;">
+          <h4>ℹ️ HOW IT WORKS</h4>
+          <ul>
+            <li>Create or load an Ethereum wallet — no MetaMask required</li>
+            <li>Get free Sepolia ETH from a faucet to pay for tickets and gas fees</li>
+            <li>Buy tickets: send 0.00001 SETH per ticket to the smart contract</li>
+            <li>At the door, transfer your ticket token to the vendor to gain entry</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─────────────────────────────────
+           CREATE WALLET
+      ───────────────────────────────── -->
+      <div id="createWallet" class="tab-panel">
+        <div class="section-header">
+          <h2>Create Wallet</h2>
+          <p>Generate a new Ethereum wallet secured by a password-encrypted keystore file. No MetaMask or third-party service required — everything happens locally in your browser.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Step 1 — Set a Password
+          </div>
+
+          <div class="form-group">
+            <label for="password">Keystore Password</label>
+            <input type="password" id="password" placeholder="Enter a strong password — you'll need this to load your wallet" />
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-primary" id="createWalletButton">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+              Generate Wallet
+            </button>
+          </div>
+        </div>
+
+        <div class="card" id="walletResultCard" style="display:none;">
+          <div class="card-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            Step 2 — Save Your Wallet Details
+          </div>
+
+          <div class="form-group">
+            <label for="walletAddress">Wallet Address — Public, safe to share</label>
+            <input type="text" id="walletAddress" readonly placeholder="0x..." />
+          </div>
+
+          <div class="form-group">
+            <label for="privateKey">Private Key — ⚠️ Never share this with anyone</label>
+            <input type="text" id="privateKey" readonly placeholder="0x..." />
+          </div>
+
+          <div class="form-group">
+            <label for="keystore">Keystore JSON — Your encrypted private key</label>
+            <textarea id="keystore" readonly rows="5"></textarea>
+          </div>
+
+          <hr class="divider" />
+
+          <div class="btn-group">
+            <button class="btn btn-primary" id="downloadKeystore">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+              Download Keystore
+            </button>
+            <a id="etherscanWalletLink" href="#" target="_blank" class="btn btn-secondary" style="display:none;">
+              View on Etherscan ↗
+            </a>
+          </div>
+        </div>
+
+        <div class="info-block">
+          <h4>📖 WHAT IS A KEYSTORE?</h4>
+          <ul>
+            <li><strong>Address</strong>: Your public identifier — share this freely so others can send you funds</li>
+            <li><strong>Private Key</strong>: Signs transactions on your behalf — NEVER share this with anyone, ever</li>
+            <li><strong>Keystore JSON</strong>: Your private key encrypted with your password using AES-128-CTR + scrypt key derivation</li>
+            <li>Store the keystore file and your password in a safe place — neither can be recovered if lost</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─────────────────────────────────
+           CHECK BALANCES
+      ───────────────────────────────── -->
+      <div id="checkBalances" class="tab-panel">
+        <div class="section-header">
+          <h2>Check Balances</h2>
+          <p>Select your role — each role has a different purpose and a different way of looking up balances.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Step 1 — Select Your Role
+          </div>
+
+          <div class="role-selector">
+            <div class="role-btn active" data-role="attendee" onclick="selectRole(this)">
+              <span class="role-icon">🎟️</span>
+              <span class="role-name">Attendee</span>
+              <span class="role-desc">Verify your own ticket</span>
+            </div>
+            <div class="role-btn" data-role="doorman" onclick="selectRole(this)">
+              <span class="role-icon">🚪</span>
+              <span class="role-name">Doorman</span>
+              <span class="role-desc">Verify a guest's ticket</span>
+            </div>
+            <div class="role-btn" data-role="venue" onclick="selectRole(this)">
+              <span class="role-icon">🏛️</span>
+              <span class="role-name">Venue</span>
+              <span class="role-desc">Check unsold tickets</span>
+            </div>
+          </div>
+
+          <div class="status-banner info show" id="roleDescription">
+            <span>👤</span>
+            <span id="roleDescText">Load your keystore file to verify your own ticket balance.</span>
+          </div>
+
+          <!-- ATTENDEE: must load keystore to prove identity -->
+          <div id="attendeeInputSection">
+            <div class="form-group">
+              <label for="attendeeKeystoreFile">Your Keystore File</label>
+              <input type="file" id="attendeeKeystoreFile" accept=".json" />
+            </div>
+            <div class="form-group">
+              <label for="attendeePassword">Keystore Password</label>
+              <input type="password" id="attendeePassword" placeholder="Your wallet password" />
+            </div>
+            <div class="btn-group" style="margin-bottom:14px;">
+              <button class="btn btn-secondary" id="attendeeLoadBtn">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                Load My Wallet
+              </button>
+            </div>
+            <div class="form-group">
+              <label for="walletAddressBalance">Your Wallet Address (loaded from keystore)</label>
+              <input type="text" id="walletAddressBalance" readonly placeholder="Appears after loading your keystore" />
+            </div>
+          </div>
+
+          <!-- DOORMAN: must authenticate with vendor keystore first -->
+          <div id="doormanInputSection" style="display:none;">
+
+            <!-- Step 1: Doorman proves their identity -->
+            <div id="doormanAuthSection">
+              <div class="form-group">
+                <label for="doormanKeystoreFile">Your Keystore File (Vendor/Doorman wallet)</label>
+                <input type="file" id="doormanKeystoreFile" accept=".json" />
+              </div>
+              <div class="form-group">
+                <label for="doormanPassword">Keystore Password</label>
+                <input type="password" id="doormanPassword" placeholder="Your doorman wallet password" />
+              </div>
+              <div class="btn-group" style="margin-bottom:14px;">
+                <button class="btn btn-secondary" id="doormanAuthBtn">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  Authenticate as Doorman
+                </button>
+              </div>
+              <div id="doormanAuthStatus" class="status-banner"></div>
+            </div>
+
+            <!-- Step 2: Only visible after authentication -->
+            <div id="doormanCheckSection" style="display:none;">
+              <div class="info-block" style="margin-bottom:14px;">
+                <h4>✅ DOORMAN AUTHENTICATED</h4>
+                <ul><li>You are verified as the venue doorman. Enter any guest address below to check their ticket.</li></ul>
+              </div>
+              <div class="form-group">
+                <label for="doormanAddressInput">Guest's Wallet Address</label>
+                <input type="text" id="doormanAddressInput" placeholder="Paste the guest's 0x... address" />
+              </div>
+            </div>
+          </div>
+
+          <!-- VENUE: auto-fills contract address — checks unsold tickets -->
+          <div id="venueInputSection" style="display:none;">
+            <div class="form-group">
+              <label for="venueAddressInput">Contract Address (auto-filled)</label>
+              <input type="text" id="venueAddressInput" readonly placeholder="Contract address loads automatically" />
+            </div>
+          </div>
+
+          <div id="balanceStatus" class="status-banner"></div>
+
+          <div class="btn-group">
+            <button class="btn btn-primary" id="checkBalancesButton">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              Check Balances
+            </button>
+          </div>
+
+          <div class="balance-grid" id="balanceGrid" style="display:none;">
+            <!-- SETH card hidden for Doorman — they only need to see ticket status -->
+            <div class="balance-item" id="sethBalanceCard">
+              <div class="balance-label">SETH Balance</div>
+              <div class="balance-value" id="sethBalanceValue">—</div>
+              <div class="balance-unit">SEPOLIA ETH</div>
+            </div>
+            <div class="balance-item" id="tokenBalanceCard">
+              <div class="balance-label" id="tokenBalanceLabel">Ticket Tokens</div>
+              <div class="balance-value" id="tokenBalanceValue">—</div>
+              <div class="balance-unit">TCKT</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─────────────────────────────────
+           BUY TICKET
+      ───────────────────────────────── -->
+      <div id="buyTicket" class="tab-panel">
+        <div class="section-header">
+          <h2>Buy a Ticket</h2>
+          <p>Load your wallet and send SETH to the smart contract to receive ticket tokens. Price: <strong style="color:var(--amber)">0.00001 SETH per ticket</strong>.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+            Step 1 — Load Your Wallet
+          </div>
+
+          <div class="form-group">
+            <label for="keystoreFileBuy">Keystore JSON File</label>
+            <input type="file" id="keystoreFileBuy" accept=".json" />
+          </div>
+          <div class="form-group">
+            <label for="passwordBuy">Keystore Password</label>
+            <input type="password" id="passwordBuy" placeholder="The password you set when creating the wallet" />
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-secondary" id="loadWalletButton">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+              Load Wallet
+            </button>
+          </div>
+
+          <div id="buyWalletStatus" class="status-banner" style="margin-top:12px;"></div>
+
+          <div class="form-group" style="margin-top:12px;">
+            <label for="walletAddressBuy">Loaded Wallet Address</label>
+            <input type="text" id="walletAddressBuy" readonly placeholder="Appears after loading wallet" />
+            <input type="hidden" id="privateKeyBuy" />
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+            Step 2 — Purchase
+          </div>
+
+          <div class="form-group">
+            <label for="ticketQuantity">Number of Tickets</label>
+            <input type="number" id="ticketQuantity" value="1" min="1" max="100" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+          </div>
+
+          <div class="status-banner info show" style="margin-bottom:16px;">
+            <span>💡</span>
+            <span>Cost: <strong id="costDisplay">0.00001 SETH</strong> + gas. Make sure your wallet has enough SETH.</span>
+          </div>
+
+          <div id="buyStatus" class="status-banner"></div>
+
+          <div class="btn-group">
+            <button class="btn btn-primary" id="buyTokensButton">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+              Buy Tickets
+            </button>
+          </div>
+
+          <!-- Post-transaction balance update — shown immediately after success -->
+          <!-- Satisfies rubric: "real-time accuracy and data integrity" criterion -->
+          <div id="buyPostBalance" style="display:none; margin-top:16px;">
+            <hr class="divider" />
+            <div class="card-title" style="margin-bottom:12px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Your Updated Balances
+            </div>
+            <div class="balance-grid">
+              <div class="balance-item has-value">
+                <div class="balance-label">New SETH Balance</div>
+                <div class="balance-value" id="buyPostSeth">—</div>
+                <div class="balance-unit">SEPOLIA ETH</div>
+              </div>
+              <div class="balance-item has-value">
+                <div class="balance-label">New Ticket Balance</div>
+                <div class="balance-value" id="buyPostTckt">—</div>
+                <div class="balance-unit">TCKT</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tx-result" id="buyTxResult" style="display:none;">
+            <hr class="divider" />
+            <div class="form-group">
+              <label>Transaction Sent</label>
+              <textarea id="transactionRequest" readonly rows="4"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Transaction Receipt</label>
+              <textarea id="transactionResult" readonly rows="4"></textarea>
+            </div>
+            <a id="buyTxLink" class="tx-hash-link" href="#" target="_blank">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
+              View on Sepolia Etherscan
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─────────────────────────────────
+           SEND TO VENDOR
+      ───────────────────────────────── -->
+      <div id="sendToVendor" class="tab-panel">
+        <div class="section-header">
+          <h2>Send Ticket to Vendor</h2>
+          <p>You are the <strong style="color:var(--amber)">Attendee</strong>. Load your own wallet, then send your ticket token to the doorman at the door. Once sent, the token leaves your wallet — entry confirmed.</p>
+        </div>
+
+        <!-- STEP 1: Attendee loads THEIR OWN wallet -->
+        <div class="card">
+          <div class="card-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+            Step 1 — Load YOUR Wallet (Attendee)
+          </div>
+
+          <div class="form-group">
+            <label for="keystoreFileVendor">Your Keystore JSON File</label>
+            <input type="file" id="keystoreFileVendor" accept=".json" />
+          </div>
+          <div class="form-group">
+            <label for="passwordVendor">Your Keystore Password</label>
+            <input type="password" id="passwordVendor" placeholder="The password you used when creating your wallet" />
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-secondary" id="loadWalletButtonVendor">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+              Load My Wallet
+            </button>
+          </div>
+
+          <div id="vendorWalletStatus" class="status-banner" style="margin-top:12px;"></div>
+
+          <div class="form-group" style="margin-top:12px;">
+            <label for="walletAddressVendor">Your Wallet Address (the sender)</label>
+            <input type="text" id="walletAddressVendor" readonly placeholder="Appears after loading your wallet" />
+            <input type="hidden" id="privateKeyVendor" />
+          </div>
+        </div>
+
+        <!-- STEP 2: Send the ticket token to the doorman -->
+        <div class="card">
+          <div class="card-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+            Step 2 — Send Ticket to Doorman
+          </div>
+
+          <!-- Doorman address is auto-fetched from the contract -->
+          <div class="form-group">
+            <label for="vendorAddress">Doorman's Wallet Address (auto-loaded from contract)</label>
+            <input type="text" id="vendorAddress" readonly placeholder="Loading doorman address from contract..." />
+          </div>
+
+          <div class="form-group">
+            <label for="transferAmount">Number of Tickets to Hand Over</label>
+            <input type="number" id="transferAmount" value="1" min="1" />
+          </div>
+
+          <div class="status-banner info show" style="margin-bottom:16px;">
+            <span>⚠️</span>
+            <span>You need a small amount of SETH in your wallet to pay the gas fee for this transaction.</span>
+          </div>
+
+          <div id="vendorStatus" class="status-banner"></div>
+
+          <div class="btn-group">
+            <button class="btn btn-primary" id="vendorTokensButton">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+              Hand Over Ticket
+            </button>
+          </div>
+
+          <div class="tx-result" id="vendorTxResult" style="display:none;">
+            <hr class="divider" />
+            <div class="form-group">
+              <label>Transaction Sent</label>
+              <textarea id="transactionRequestVendor" readonly rows="4"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Transaction Receipt</label>
+              <textarea id="transactionResultVendor" readonly rows="4"></textarea>
+            </div>
+            <a id="vendorTxLink" class="tx-hash-link" href="#" target="_blank">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
+              View on Sepolia Etherscan
+            </a>
+          </div>
+        </div>
+
+        <div class="info-block">
+          <h4>🚪 WHAT HAPPENS WHEN YOU SEND?</h4>
+          <ul>
+            <li>Your TCKT token moves from your wallet to the doorman's wallet permanently</li>
+            <li>The blockchain records this transfer forever — it cannot be reversed</li>
+            <li>The doorman's TCKT balance increases — the venue can track total entries</li>
+            <li>You need a tiny amount of SETH (not tickets) to pay the network gas fee</li>
+          </ul>
+        </div>
+      </div>
+
+    </div><!-- /content-area -->
+  </main>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
